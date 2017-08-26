@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>绘制图像</title>
+</head>
+<body>
+<Image src = "image/fruit.png"></Image>
+<canvas id="drawing" width=" 500" height="500">A drawing of something.</canvas>
+<canvas id="drawSecond" width=" 250" height="250"></canvas>
+<canvas id="drawThird" width=" 250" height="250"></canvas>
+<script>
+    var drawing = document.getElementById("drawing");
+    var context = drawing.getContext("2d"),
+            image = document.images[0],
+            imageData, data,
+            i, len, average,
+            red, green, blue, alpha;
+    var drawSecond = document.getElementById("drawSecond");
+    var contextSecond = drawSecond.getContext("2d");
+    var drawThird = document.getElementById("drawThird");
+    var contextThird = drawThird.getContext("2d");
+    //传入一个 HTML <img>元素，以及绘制该图像的起点的 x 和 y 坐标
+    context.drawImage(image, 10, 10);
+    //取得图像数据
+    imageData = context.getImageData(10, 10, image.width, image.height);
+    data = imageData.data;
+    for (i=0, len=data.length; i < len; i+=4){
+        red = data[i];
+        green = data[i+1];
+        blue = data[i+2];
+        alpha = data[i+3];
+        //求得 rgb 平均值
+        average = Math.floor((red + green + blue) / 3);
+        //设置颜色值，透明度不变
+        data[i] = average;
+        data[i+1] = average;
+        data[i+2] = average;
+    }
+    //回写图像数据并显示结果
+    imageData.data = data;
+    context.putImageData(imageData, 200, 200);
+    //目标宽度和目标高度
+    contextSecond.drawImage(image, 50, 10, 20, 30);
+    // 9 个参数：要绘制的图像、源图像的 x 坐标、源图像的 y 坐标、源图像的宽度、源图像的高度、
+    // 目标图像的 x 坐标、目标图像的 y 坐标、目标图像的宽度、目标图像的高度。
+    contextThird.drawImage(image, 0, 10, 50, 50, 0, 100, 40, 60);
+</script>
+</body>
+</html>

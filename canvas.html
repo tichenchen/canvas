@@ -1,0 +1,106 @@
+<!DOCTYPE>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>绘图</title>
+</head>
+<body>
+<canvas id="drawing" width=" 300" height="300">A drawing of something.</canvas>
+<canvas id="drawPath" width=" 200" height="200">draw path.</canvas>
+<a href="drawImage.html">绘制图像</a>
+<script>
+    var drawing = document.getElementById("drawing");
+    var drawPath = document.getElementById("drawPath");
+    //确定浏览器支持<canvas>元素
+    if (drawing.getContext){
+        //取得绘图上下文
+        var context = drawing.getContext("2d");
+        //矩形是唯一一种可以直接在 2D 上下文中绘制的形状。
+        // 与矩形有关的方法包括 fillRect()、strokeRect()和 clearRect()。
+        // 这三个方法都能接收 4 个参数：矩形的 x 坐标、矩形的 y 坐标、矩形宽度和矩形高度。这些参数的单位都是像素。
+        //context.strokeStyle = "red";
+        //绘制红色矩形
+        context.fillStyle = "#ff0000";
+        context.fillRect(10, 10, 50, 50);
+        //起点的 x 坐标、起点的 y 坐标、终点的 x 坐标、终点的 y 坐标
+        var gradient = context.createLinearGradient(30, 30, 70, 70);
+        gradient.addColorStop(0, "white");
+        gradient.addColorStop(1, "black");
+        context.fillStyle = gradient;
+        context.fillRect(30, 30, 50, 50);
+        var gradient = context.createRadialGradient(125, 125, 10, 125, 125, 20);
+        gradient.addColorStop(0, "white");
+        gradient.addColorStop(1, "black");
+//绘制渐变矩形
+        context.fillStyle = gradient;
+        context.fillRect(100, 100, 50, 50);
+        //在两个矩形重叠的地方清除一个小矩形
+        context.clearRect(40, 40, 10, 10);
+
+
+
+
+        //设置阴影
+        context.shadowOffsetX = 5;
+        context.shadowOffsetY = 5;
+        context.shadowBlur = 4;
+        context.shadowColor = "rgba(0, 0, 0, 0.5)";
+        //绘制红色描边矩形
+        context.strokeStyle = "#ff0000";
+        context.strokeRect(150, 150, 50, 50);
+        //绘制半透明的蓝色描边矩形
+        context.strokeStyle = "rgba(0,0,255,0.5)";
+        //描边的宽
+        context.lineWidth = 5;
+        //控制线条末端的形状是平头、圆头还是方头（"butt"、"round"或"square"）
+        context.lineCap = "round";
+        //控制线条相交的方式是圆交、斜交还是斜接（"round"、 "bevel"或"miter"）
+        context.lineJoin = "round";
+        context.strokeRect(180, 180, 50, 50);
+        //取得图像的数据 URI
+        var imgURI = drawing.toDataURL("image/png");
+        //显示图像
+        var image = document.createElement("img");
+        image.src = imgURI;
+        document.body.appendChild(image);
+
+
+
+
+
+
+        //绘制路径在第二个区域
+        var context = drawPath.getContext("2d");
+         //开始路径
+        context.beginPath();
+        //绘制外圆
+        //arc(x, y, radius, startAngle, endAngle, counterclockwise)：
+        //以(x,y)为圆心绘制一条弧线，半径为 radius，起始和结束角度（用弧度表示）分别为 startAngle 和endAngle。
+        //最后一个参数表示 startAngle 和 endAngle 是否按逆时针方向计算，值为 false表示按顺时针方向计算。
+        context.arc(100, 100, 99, 0, 2 * Math.PI, false);
+        //绘制内圆,将绘图游标移动到(x,y)，不画线
+        context.moveTo(194, 100);
+        context.arc(100, 100, 94, 0, 2 * Math.PI, false);
+        //绘制分针
+        context.moveTo(100, 100);
+        context.lineTo(100, 15);
+        //绘制时针
+        context.moveTo(100, 100);
+        context.lineTo(35, 100);
+        //绘制半透明的蓝色描边矩形
+       // context.fillStyle = "rgba(0,0,255,0.5)";
+       // context.fill();
+        //描边路径
+        context.stroke();
+        if (context.isPointInPath(100, 100)){
+            alert("Point (100, 100) is in the path.");
+        }
+        context.font = "bold 14px Arial";
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillText("12", 100, 20);
+
+    }
+</script>
+</body>
+</html>
